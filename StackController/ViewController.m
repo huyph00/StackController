@@ -22,7 +22,7 @@
 
     NSMutableArray * arrStack = [NSMutableArray array];
     
-    for (int i = 0; i <5; i++) {
+    for (int i = 0; i <50; i++) {
         StackObject *stack = [[StackObject alloc]init];
         stack.strTitle = [NSString stringWithFormat:@"stack %d",i];
         UIView * view= [[UIView alloc]initWithFrame:self.view.bounds];
@@ -32,7 +32,7 @@
         
     }
     
-    StackController *stackView= [[StackController alloc]initWithFrame:self.view.bounds data:arrStack selectedIndex:3];
+    StackController *stackView= [[StackController alloc]initWithFrame:self.view.bounds data:arrStack titleFont:nil selectedIndex:3];
     [self.view addSubview:stackView];
 }
 
@@ -45,27 +45,14 @@
 
 - (IBAction)testAnimation:(id)sender {
     
+ //   aView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+    CGRect frame = aView.frame;
+    CGPoint topCenter = CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame));
+    
+    aView.layer.anchorPoint = CGPointMake(0.5, 0);
+    aView.transform = CGAffineTransformMakeScale(1.0, 0.5);
+    aView.layer.position = topCenter;
 
-//    [UIView animateWithDuration:1.0 animations:^{
-//        
-////        CGRect rect = aView.frame;
-////        rect.origin.y +=100;
-////        aView.frame = rect;
-//        
-//        
-//        
-//        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
-//   //     rotationAndPerspectiveTransform.m34 = 1.0 / -1000.0;
-//        rotationAndPerspectiveTransform = CATransform3DMakeScale( 0.5f, 0.5f, 0.5f);
-//        
-//        
-//     //   aView.layer.anchorPoint = CGPointMake(0.5, 0);
-//        aView.layer.transform = rotationAndPerspectiveTransform;
-//        
-//        bView.layer.transform = rotationAndPerspectiveTransform;
-//    } completion:^(BOOL finished){
-//        // code to be executed when flip is completed
-//    }];
     
 }
 #pragma mark - stack controller delegate

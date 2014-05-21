@@ -32,11 +32,18 @@
     CGFloat titleHeight;
     
     UIButton * btnHome;
+    CGFloat topSpace;
+    CGFloat rateFinal ;
+
+    UIFont * titleFont;
 }
+@property(nonatomic,strong)UIScrollView * scrView;
+@property(nonatomic,strong)UIFont * titleFont;
+
 @property(nonatomic)CGFloat zoomRate;
 @property(nonatomic)CGFloat titleHeight;
 
 @property(nonatomic,strong) StackObject * stackSelected;
--(id)initWithFrame:(CGRect)frame data:(NSArray *)data selectedIndex:(int)index;
+-(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectedIndex:(int)index;
 
 @end

@@ -11,6 +11,7 @@
 #import "StackController.h"
 @interface ViewController : UIViewController<StackControllerDelegate>
 {
+    __weak IBOutlet UIView *aView;
 
 }
 - (IBAction)testAnimation:(id)sender;

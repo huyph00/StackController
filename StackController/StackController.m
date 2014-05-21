@@ -9,7 +9,7 @@
 #import "StackController.h"
 
 @implementation StackController
-@synthesize stackSelected,titleHeight,zoomRate;
+@synthesize stackSelected,titleHeight,zoomRate,scrView,titleFont;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -20,11 +20,12 @@
     return self;
 }
 
--(id)initWithFrame:(CGRect)frame data:(NSArray *)data selectedIndex:(int)index
+-(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectedIndex:(int)index
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        rateFinal = 0.8 ;
         zoomRate = 0.05;
         titleHeight = 50;
         arrData = data;
@@ -35,43 +36,53 @@
         CGFloat scrHeightSize = topSpace + topSpace * arrData.count;
         scrView = [[UIScrollView alloc]initWithFrame:scrRect];
         scrView.delegate = self;
+        scrView.decelerationRate = UIScrollViewDecelerationRateNormal;
+        [scrView setShowsVerticalScrollIndicator:NO];
+        titleFont=font;
         [self addSubview:scrView];
         
         [scrView setContentSize:CGSizeMake(self.frame.size.width, scrHeightSize)];
         //button remove showing view
         btnHome = [UIButton buttonWithType:UIButtonTypeCustom];
-        btnHome.frame = CGRectMake(0, 50, 100, 40);
+        
+        btnHome.frame = CGRectMake(0, 30, 100, 40);
         [btnHome setTitle:@"Back" forState:UIControlStateNormal];
         [btnHome setBackgroundColor:[UIColor redColor]];
         [btnHome addTarget:self action:@selector(backToHome:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:btnHome];
         scrView.bounces = NO;
         
+        btnHome.hidden= YES;
+        
         //init stack view
         for (int i = 0 ; i < data.count; i++) {
             StackObject * stk = [data objectAtIndex:i];
             CGRect itemFrame = self.bounds;
             
-            itemFrame.origin.y =scrRect.size.height/2 + scrRect.size.height/2 * i;
-            
+            itemFrame.origin.y =topSpace + topSpace * i;
+            // create stack
             UIView * viewStack = [[UIView alloc]initWithFrame:itemFrame];
             viewStack.backgroundColor = [UIColor yellowColor];
             viewStack.layer.borderColor = [UIColor blackColor].CGColor;
             viewStack.layer.borderWidth = 1;
 
+            //add background for stack
+            UIImage * bgImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"stack-bg" ofType:@"png"]];
+            UIImageView * bgImageView = [[UIImageView alloc]initWithImage:[self standarScaleWithImage:bgImage]];
+            bgImageView.frame = viewStack.bounds;
+            [viewStack addSubview:bgImageView];
+            
+            //add label title
             UILabel * lblTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, itemFrame.size.width, titleHeight)];
             lblTitle.text = stk.strTitle;
             lblTitle.textAlignment = NSTextAlignmentCenter;
             [viewStack addSubview:lblTitle];
-            
+            lblTitle.font = titleFont;
 
-            
             stk.viewDetail.frame = CGRectMake(0, titleHeight, viewStack.frame.size.width, viewStack.frame.size.height);
             [viewStack addSubview:stk.viewDetail];
             
-            
             //add button event touch stack
-            
             UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.backgroundColor = [UIColor clearColor];
             button.frame = viewStack.bounds;
@@ -91,12 +102,24 @@
     }
     return self;
 }
+
+
+-(UIImage*)standarScaleWithImage:(UIImage *)imgStandar
+{
+    
+    return [imgStandar resizableImageWithCapInsets:UIEdgeInsetsMake(imgStandar.size.height/2, imgStandar.size.width/2, imgStandar.size.height/2,imgStandar.size.width/2)];
+    
+}
+
+
 -(void)backToHome:(UIButton *)button
 {
     if(viewSelected)
     {
+        btnHome.hidden= YES;
+
         UIView * removeView = stackSelected.viewDetail;
-        [UIView animateWithDuration:1.0 animations:^{
+        [UIView animateWithDuration:0.5 animations:^{
         
             removeView.frame = oldFrame;
         }completion:^(BOOL finished){
@@ -109,10 +132,13 @@
     }
 }
 
-static CGRect oldFrame;
+static CGRect oldFrame;//save frame to send back presenting view
 
 -(void)stackSelected:(UIButton*)button
 {
+    //check view presenting
+    if(viewSelected) return;
+
     StackObject * obj = [arrData objectAtIndex:button.tag];
     [delegate selectedObject:obj];
     stackSelected = obj;
@@ -122,21 +148,23 @@ static CGRect oldFrame;
     CGFloat  viewX = viewSelected.layer.frame.origin.x ;
     CGFloat  viewWidth = viewSelected.layer.frame.size.width;
     oldFrame =CGRectMake(viewX, viewY,viewWidth, obj.viewDetail.frame.size.height);
+    
     obj.viewDetail.frame = oldFrame;
     [self addSubview:obj.viewDetail];
     
     
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         
         obj.viewDetail.frame = self.bounds;
         [self bringSubviewToFront:btnHome];
         
-    }];}
--(void)showView
-{
+    }completion:^(BOOL finished){
     
+        btnHome.hidden= NO;
+
+    
+    }];
 }
-static CGFloat topSpace = 230;
 
 -(void)fixFrameForItems
 {
@@ -145,16 +173,15 @@ static CGFloat topSpace = 230;
     //fix current item
     CGFloat range = selecttingIndex * topSpace -curr_scroll_y ;
     CGFloat distance =titleHeight + (topSpace - titleHeight)*range/topSpace;
-     //   NSLog(@"distance %f",distance);
     
     UIView * curView = [arrStacks objectAtIndex:selecttingIndex];
     //update selected view
     CGRect itemFrame = curView.frame;
     itemFrame.origin.y =topSpace + topSpace * selecttingIndex;
     curView.frame = itemFrame;
-    CGFloat rate = 1.0 -(topSpace - range)/topSpace * 0.05;
-    
-  //  NSLog(@"rate %f",rate);
+    CGFloat x =(topSpace - range)/topSpace;
+
+    CGFloat rate = 1.0 -rateFinal*x/(x + 10);
     [self transFormView:curView rate:1.0f];
     
     //fix above item
@@ -166,39 +193,36 @@ static CGFloat topSpace = 230;
         rect.origin.y = curView.frame.origin.y - distance*rate;
         aboveView.frame = rect;
         
-        
         [self transFormView:aboveView rate:rate];
 
         
     }
     //fix other items
-    if(selecttingIndex > 1)for (int i = selecttingIndex - 1; i > 0; i--)
-    {
-        UIView * view1 =[arrStacks objectAtIndex:i];
-        UIView * view2 =[arrStacks objectAtIndex:i-1];
-        
-        
-        range = i * topSpace -curr_scroll_y;
-        CGFloat rate = 1.0 -(topSpace - range)/topSpace * zoomRate;
-        NSLog(@"range %f",range);
-        CGRect rect = view2.frame;
-        rect.origin.y = view1.frame.origin.y - titleHeight*rate;
-        view2.frame = rect;
+    if(selecttingIndex > 1)
+        for (int i = selecttingIndex - 1; i > 0; i--)
+        {
+            UIView * view1 =[arrStacks objectAtIndex:i];
+            UIView * view2 =[arrStacks objectAtIndex:i-1];
+            
+            range = i * topSpace -curr_scroll_y;
+            CGFloat x =(topSpace - range)/topSpace;
+            CGFloat rate = 1.0 -rateFinal*x/(x + 10);
+            NSLog(@"range %f; rate %f",range,rate);
 
-        [self transFormView:view2 rate:rate];
-
-    }
+            [self transFormView:view2 rate:rate];
+         
+            CGRect rect = view2.frame;
+            rect.origin.y = view1.frame.origin.y - titleHeight*rate*rate;
+            view2.frame = rect;
+        }
     
 }
 
 -(void)transFormView:(UIView *)view rate:(CGFloat)rate
 
 {
-    CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
-//     rotationAndPerspectiveTransform.m34 = 1.0 / -1000.0;
-    rotationAndPerspectiveTransform = CATransform3DMakeScale(rate, rate, 1.0f);
-//    view.layer.anchorPoint = CGPointMake(0.5, 0);
-    view.layer.transform = rotationAndPerspectiveTransform;
+  //  view.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    view.transform =  CGAffineTransformMakeScale(rate, rate);;
 
 }
 
@@ -206,12 +230,12 @@ static CGFloat topSpace = 230;
 #pragma mark - scroll delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;                                               // any offset changes
 {
-
     curr_scroll_y = scrollView.contentOffset.y ;
     selecttingIndex = curr_scroll_y/topSpace + 1;
     if(selecttingIndex >= arrStacks.count)selecttingIndex = arrStacks.count-1;
 
     [self fixFrameForItems];
+
 }
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 {
@@ -220,10 +244,9 @@ static CGFloat topSpace = 230;
         int index2 = scrollView.contentOffset.y / (topSpace/2);
         
         int index = (index2 % 2 > 0) ? index2/2 + 1:index2 /2;
-        
-        NSLog(@"index %d",index);
+
         [scrollView setContentOffset:CGPointMake(0, index* topSpace) animated:YES];
-        ;
+
     }
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;      // called when scroll view grinds to a halt
@@ -233,7 +256,9 @@ static CGFloat topSpace = 230;
     int index = (index2 % 2 > 0) ? index2/2 + 1:index2 /2;
     
     [scrollView setContentOffset:CGPointMake(0, index* topSpace) animated:YES];
-    ;
+
+//   NSLog(@"index %d",index);
+
 }
 
 /*
@@ -244,5 +269,26 @@ static CGFloat topSpace = 230;
     // Drawing code
 }
 */
+/*
+static CGPoint point1;
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
+{
+}
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
+{
+    UITouch *touch=[touches anyObject];
 
+    CGPoint point2 = [touch locationInView:self];//(point2 is type of CGPoint)
+    
+    CGFloat disTance = point2.y - point1.y;
+    point1 = point2;
+    NSLog(@"%f",disTance);
+}
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
+{
+}
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+}
+ */
 @end
