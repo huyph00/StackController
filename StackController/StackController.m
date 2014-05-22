@@ -20,7 +20,7 @@
     return self;
 }
 
--(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectedIndex:(int)index
+-(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectStackAtOriginY:(CGFloat)origin_y selectedIndex:(int)index
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -30,95 +30,107 @@
         rateFinal = 0.8 ;
         titleHeight = 50;
         arrData = data;
+        titleFont=font;
 
         if  (index < 0)selecttingIndex = 0;
         else   if(index >= arrData.count)selecttingIndex = arrData.count- 1;
         else selecttingIndex = index;
         
-        
+        selectedStack_origin_y = origin_y;
         arrStacks = [NSMutableArray array];
-        topSpace = self.frame.size.height/2; // define topspace = viewheight/2
-        CGRect scrRect = self.bounds;
-        CGFloat scrHeightSize = topSpace + topSpace * arrData.count;
-        scrView = [[UIScrollView alloc]initWithFrame:scrRect];
-        scrView.delegate = self;
-        scrView.decelerationRate = UIScrollViewDecelerationRateNormal;
-        [scrView setShowsVerticalScrollIndicator:NO];
-        titleFont=font;
-        [self addSubview:scrView];
-        
-        [scrView setContentSize:CGSizeMake(self.frame.size.width, scrHeightSize)];
-        //button remove showing view
-        btnHome = [UIButton buttonWithType:UIButtonTypeCustom];
-        
-        btnHome.frame = CGRectMake(30, 30, 40 , 40);
-    //  [btnHome setImage:[self standarScaleWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]]] forState:UIControlStateNormal];
-        [btnHome setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]] forState:UIControlStateNormal];
-        [btnHome addTarget:self action:@selector(backToHome:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:btnHome];
-        scrView.bounces = NO;
-        
-        btnHome.hidden= YES;
-        
-        //init stack view
-        for (int i = 0 ; i < data.count; i++) {
-            StackObject * stk = [data objectAtIndex:i];
-            CGRect itemFrame = self.bounds;
-            
-            itemFrame.origin.y =topSpace + topSpace * i;
-            // create stack
-            UIView * viewStack = [[UIView alloc]initWithFrame:itemFrame];
-            viewStack.backgroundColor = [UIColor clearColor];
-            viewStack.clipsToBounds = NO;
-            
-            //add background for stack title
-            UIImage * bgImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"stack-bg-1" ofType:@"png"]];
-            UIImageView * bgImageView = [[UIImageView alloc]initWithImage:[self standarScaleWithImage:bgImage]];
-            bgImageView.frame =CGRectMake(0, -20, itemFrame.size.width, titleHeight+20);
-            [viewStack addSubview:bgImageView];
-            
-            
-            //add background stack content
 
-            UIImage * bgContentImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"stack-content-bg" ofType:@"png"]];
-            UIImageView * bgContentImageView = [[UIImageView alloc]initWithImage:[self standarScaleWithImage:bgContentImage]];
-            bgContentImageView.frame =CGRectMake(0, titleHeight, itemFrame.size.width, itemFrame.size.height-titleHeight);
-            [viewStack addSubview:bgContentImageView];
-            bgContentImageView.tag = 199;
-            
-            //add label title
-            UILabel * lblTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, itemFrame.size.width, titleHeight)];
-            lblTitle.text = stk.strTitle;
-            lblTitle.backgroundColor = [UIColor clearColor];
-            lblTitle.textAlignment = NSTextAlignmentCenter;
-            lblTitle.textColor = [UIColor whiteColor];
-            [viewStack addSubview:lblTitle];
-            lblTitle.font = titleFont;
-
-            stk.viewDetail.frame = CGRectMake(0, titleHeight, viewStack.frame.size.width, viewStack.frame.size.height-titleHeight);
-            [viewStack addSubview:stk.viewDetail];
-            
-            //add button event touch stack
-            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.backgroundColor = [UIColor clearColor];
-            button.frame = viewStack.bounds;
-            [viewStack addSubview:button];
-            [button setTag:i];
-            [button addTarget:self action:@selector(stackSelected:) forControlEvents:UIControlEventTouchUpInside];
-            
-            [scrView addSubview:viewStack];
-            [arrStacks addObject:viewStack];
-            
-        }
-        
-        [scrView setContentOffset:CGPointMake(0, selecttingIndex * topSpace)];
-        curr_scroll_y = scrView.contentOffset.y;
-        NSLog(@"start offset %f",scrView.contentOffset.y);
-        [self fixFrameForItems];
     }
     return self;
 }
+-(void)setUpView
+{
+    CGRect scrRect = self.bounds;
+    
+    scrRect.origin.y = -(scrRect.size.height/2 -  selectedStack_origin_y)*2 ;
+    scrRect.size.height -= scrRect.origin.y;
+    topSpace = scrRect.size.height/2; // define topspace = scrollheight/2
+    
+    CGFloat scrHeightSize = topSpace + topSpace * arrData.count;
+    
+    
+    scrView = [[UIScrollView alloc]initWithFrame:scrRect];
+    scrView.delegate = self;
+    scrView.decelerationRate = UIScrollViewDecelerationRateNormal;
+    [scrView setShowsVerticalScrollIndicator:NO];
+    //      scrView.scrollEnabled =YES;
+    [self addSubview:scrView];
+    
+    [scrView setContentSize:CGSizeMake(self.frame.size.width, scrHeightSize)];
+    //button remove showing view
+    btnHome = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    btnHome.frame = CGRectMake(30, 30, 40 , 40);
+    //  [btnHome setImage:[self standarScaleWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]]] forState:UIControlStateNormal];
+    [btnHome setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]] forState:UIControlStateNormal];
+    [btnHome addTarget:self action:@selector(backToHome:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:btnHome];
+    scrView.bounces = NO;
+    
+    btnHome.hidden= YES;
+    
+    //init stack view
+    for (int i = 0 ; i < arrData.count; i++) {
+        StackObject * stk = [arrData objectAtIndex:i];
+        CGRect itemFrame = self.bounds;
+        
+        itemFrame.origin.y =topSpace + topSpace * i;
+        // create stack
+        UIView * viewStack = [[UIView alloc]initWithFrame:itemFrame];
+        viewStack.backgroundColor = [UIColor clearColor];
+        viewStack.clipsToBounds = NO;
+        
+        //add background for stack title
+        UIImage * bgImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"stack-bg-1" ofType:@"png"]];
+        UIImageView * bgImageView = [[UIImageView alloc]initWithImage:[self standarScaleWithImage:bgImage]];
+        bgImageView.frame =CGRectMake(0, -20, itemFrame.size.width, titleHeight+20);
+        [viewStack addSubview:bgImageView];
+        
+        
+        //add background stack content
+        
+        UIImage * bgContentImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"stack-content-bg" ofType:@"png"]];
+        UIImageView * bgContentImageView = [[UIImageView alloc]initWithImage:[self standarScaleWithImage:bgContentImage]];
+        bgContentImageView.frame =CGRectMake(0, titleHeight, itemFrame.size.width, itemFrame.size.height-titleHeight);
+        [viewStack addSubview:bgContentImageView];
+        bgContentImageView.tag = 199;
+        
+        //add label title
+        UILabel * lblTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, itemFrame.size.width, titleHeight)];
+        lblTitle.text = stk.strTitle;
+        lblTitle.backgroundColor = [UIColor clearColor];
+        lblTitle.textAlignment = NSTextAlignmentCenter;
+        lblTitle.textColor = [UIColor whiteColor];
+        [viewStack addSubview:lblTitle];
+        lblTitle.font = titleFont;
+        
+        stk.viewDetail.frame = CGRectMake(0, titleHeight, viewStack.frame.size.width, viewStack.frame.size.height-titleHeight);
+        [viewStack addSubview:stk.viewDetail];
+        
+        //add button event touch stack
+        UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.backgroundColor = [UIColor clearColor];
+        button.frame = viewStack.bounds;
+        [viewStack addSubview:button];
+        [button setTag:i];
+        [button addTarget:self action:@selector(stackSelected:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [scrView addSubview:viewStack];
+        [arrStacks addObject:viewStack];
+        
+    }
+    
+    [scrView setContentOffset:CGPointMake(0, selecttingIndex * topSpace)];
+    curr_scroll_y = scrView.contentOffset.y;
+    NSLog(@"start offset %f",scrView.contentOffset.y);
+    [self fixFrameForItems];
 
+
+}
 
 -(UIImage*)standarScaleWithImage:(UIImage *)imgStandar
 {

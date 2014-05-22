@@ -34,6 +34,7 @@
     UIButton * btnHome;
     CGFloat topSpace;
     CGFloat rateFinal ;
+    CGFloat selectedStack_origin_y ;
 
     UIFont * titleFont;
 }
@@ -44,6 +45,7 @@
 @property(nonatomic)CGFloat titleHeight;
 
 @property(nonatomic,strong) StackObject * stackSelected;
--(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectedIndex:(int)index;
+-(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectStackAtOriginY:(CGFloat)origin_y selectedIndex:(int)index;
+-(void)setUpView;
 
 @end

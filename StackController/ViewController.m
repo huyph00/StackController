@@ -34,7 +34,8 @@
         
     }
     
-    StackController *stackView= [[StackController alloc]initWithFrame:self.view.bounds data:arrStack titleFont:nil selectedIndex:23];
+    StackController *stackView= [[StackController alloc]initWithFrame:self.view.bounds data:arrStack titleFont:nil selectStackAtOriginY:200  selectedIndex:23];
+    [stackView setUpView];
     [self.view addSubview:stackView];
 }
 
