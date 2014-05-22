@@ -19,7 +19,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-
+    UIImageView * imgBg = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    imgBg.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"background-02" ofType:@"png"]];
+    [self.view addSubview:imgBg];
     NSMutableArray * arrStack = [NSMutableArray array];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     for (int i = 0; i <50; i++) {

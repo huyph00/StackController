@@ -26,6 +26,7 @@
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
+
         rateFinal = 0.8 ;
         titleHeight = 50;
         arrData = data;
@@ -190,17 +191,17 @@ static CGRect oldFrame;//save frame to send back presenting view
     
     }];
 }
-static int const max_stack_num_to_show = 20;//num of stack must fix at same time
+static int const max_stack_num_to_show = 20;//num of stack must fix at same time. to decrease the calculation of loop
 -(void)fixFrameForItems
 {
   
     //range from 0 -> 230 iphone
     //fix current item
     
-    CGFloat testHeight = titleHeight - 10;
+    CGFloat visibleHeight = titleHeight - 10;
     
     CGFloat range = selecttingIndex * topSpace -curr_scroll_y ;
-    CGFloat distance =testHeight + (topSpace - testHeight)*range/topSpace;
+    CGFloat distance =visibleHeight + (topSpace - visibleHeight)*range/topSpace;
     
     UIView * curView = [arrStacks objectAtIndex:selecttingIndex];
     //update selected view
@@ -236,12 +237,12 @@ static int const max_stack_num_to_show = 20;//num of stack must fix at same time
             range = i * topSpace -curr_scroll_y;
             CGFloat x =(topSpace - range)/topSpace;
             CGFloat rate = 1.0 -rateFinal*x/(x + 30);
-            NSLog(@"range %f; rate %f",range,rate);
+//            NSLog(@"range %f; rate %f",range,rate);
 
             [self transFormView:view2 rate:rate];
             
             CGRect rect = view2.frame;
-            rect.origin.y = view1.frame.origin.y - (testHeight+1)*rate;
+            rect.origin.y = view1.frame.origin.y - (visibleHeight+visibleHeight/20)*rate;
             view2.frame = rect;
         }
     }
