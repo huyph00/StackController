@@ -10,6 +10,7 @@
 		98A7B34A192D90590012733E /* stack-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B349192D90590012733E /* stack-bg.png */; };
 		98A7B34C192D95560012733E /* close-btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B34B192D95560012733E /* close-btn.png */; };
 		98A7B34E192D9FE20012733E /* stack-bg-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B34D192D9FE20012733E /* stack-bg-1.png */; };
+		98A7B350192DDC120012733E /* stack-content-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B34F192DDC120012733E /* stack-content-bg.png */; };
 		98B6CFA5192703010020A3A3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98B6CFA4192703010020A3A3 /* Foundation.framework */; };
 		98B6CFA7192703010020A3A3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98B6CFA6192703010020A3A3 /* CoreGraphics.framework */; };
 		98B6CFA9192703010020A3A3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98B6CFA8192703010020A3A3 /* UIKit.framework */; };
@@ -43,6 +44,7 @@
 		98A7B349192D90590012733E /* stack-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stack-bg.png"; sourceTree = "<group>"; };
 		98A7B34B192D95560012733E /* close-btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-btn.png"; sourceTree = "<group>"; };
 		98A7B34D192D9FE20012733E /* stack-bg-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stack-bg-1.png"; sourceTree = "<group>"; };
+		98A7B34F192DDC120012733E /* stack-content-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stack-content-bg.png"; sourceTree = "<group>"; };
 		98B6CFA1192703010020A3A3 /* StackController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StackController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98B6CFA4192703010020A3A3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		98B6CFA6192703010020A3A3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -145,6 +147,7 @@
 		98B6CFAB192703010020A3A3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				98A7B34F192DDC120012733E /* stack-content-bg.png */,
 				98A7B34D192D9FE20012733E /* stack-bg-1.png */,
 				98A7B34B192D95560012733E /* close-btn.png */,
 				98A7B349192D90590012733E /* stack-bg.png */,
@@ -251,6 +254,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				98B6CFBB192703010020A3A3 /* Main_iPad.storyboard in Resources */,
+				98A7B350192DDC120012733E /* stack-content-bg.png in Resources */,
 				98A7B34C192D95560012733E /* close-btn.png in Resources */,
 				98A7B34E192D9FE20012733E /* stack-bg-1.png in Resources */,
 				98A7B34A192D90590012733E /* stack-bg.png in Resources */,

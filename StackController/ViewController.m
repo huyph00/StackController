@@ -21,7 +21,7 @@
     
 
     NSMutableArray * arrStack = [NSMutableArray array];
-    
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     for (int i = 0; i <50; i++) {
         StackObject *stack = [[StackObject alloc]init];
         stack.strTitle = [NSString stringWithFormat:@"stack %d",i];
@@ -32,7 +32,7 @@
         
     }
     
-    StackController *stackView= [[StackController alloc]initWithFrame:self.view.bounds data:arrStack titleFont:nil selectedIndex:3];
+    StackController *stackView= [[StackController alloc]initWithFrame:self.view.bounds data:arrStack titleFont:nil selectedIndex:23];
     [self.view addSubview:stackView];
 }
 
@@ -52,7 +52,6 @@
     aView.layer.anchorPoint = CGPointMake(0.5, 0);
     aView.transform = CGAffineTransformMakeScale(1.0, 0.5);
     aView.layer.position = topCenter;
-
     
 }
 #pragma mark - stack controller delegate

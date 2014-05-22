@@ -9,7 +9,7 @@
 #import "StackController.h"
 
 @implementation StackController
-@synthesize stackSelected,titleHeight,zoomRate,scrView,titleFont;
+@synthesize stackSelected,titleHeight,scrView,titleFont;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -25,12 +25,16 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
         rateFinal = 0.8 ;
-        zoomRate = 0.05;
         titleHeight = 50;
         arrData = data;
-        selecttingIndex = index;
+
+        if  (index < 0)selecttingIndex = 0;
+        else   if(index >= arrData.count)selecttingIndex = arrData.count- 1;
+        else selecttingIndex = index;
+        
+        
         arrStacks = [NSMutableArray array];
         topSpace = self.frame.size.height/2; // define topspace = viewheight/2
         CGRect scrRect = self.bounds;
@@ -46,10 +50,8 @@
         //button remove showing view
         btnHome = [UIButton buttonWithType:UIButtonTypeCustom];
         
-        
-        
         btnHome.frame = CGRectMake(30, 30, 40 , 40);
-      //  [btnHome setImage:[self standarScaleWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]]] forState:UIControlStateNormal];
+    //  [btnHome setImage:[self standarScaleWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]]] forState:UIControlStateNormal];
         [btnHome setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]] forState:UIControlStateNormal];
         [btnHome addTarget:self action:@selector(backToHome:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:btnHome];
@@ -66,17 +68,22 @@
             // create stack
             UIView * viewStack = [[UIView alloc]initWithFrame:itemFrame];
             viewStack.backgroundColor = [UIColor clearColor];
-            viewStack.layer.borderColor = [UIColor blackColor].CGColor;
             viewStack.clipsToBounds = NO;
             
-            //add background for stack
+            //add background for stack title
             UIImage * bgImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"stack-bg-1" ofType:@"png"]];
             UIImageView * bgImageView = [[UIImageView alloc]initWithImage:[self standarScaleWithImage:bgImage]];
             bgImageView.frame =CGRectMake(0, -20, itemFrame.size.width, titleHeight+20);
             [viewStack addSubview:bgImageView];
             
-            bgImageView.tag = 199;
             
+            //add background stack content
+
+            UIImage * bgContentImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"stack-content-bg" ofType:@"png"]];
+            UIImageView * bgContentImageView = [[UIImageView alloc]initWithImage:[self standarScaleWithImage:bgContentImage]];
+            bgContentImageView.frame =CGRectMake(0, titleHeight, itemFrame.size.width, itemFrame.size.height-titleHeight);
+            [viewStack addSubview:bgContentImageView];
+            bgContentImageView.tag = 199;
             
             //add label title
             UILabel * lblTitle = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, itemFrame.size.width, titleHeight)];
@@ -87,7 +94,7 @@
             [viewStack addSubview:lblTitle];
             lblTitle.font = titleFont;
 
-            stk.viewDetail.frame = CGRectMake(0, titleHeight, viewStack.frame.size.width, viewStack.frame.size.height);
+            stk.viewDetail.frame = CGRectMake(0, titleHeight, viewStack.frame.size.width, viewStack.frame.size.height-titleHeight);
             [viewStack addSubview:stk.viewDetail];
             
             //add button event touch stack
@@ -133,10 +140,13 @@
         
             removeView.frame = oldFrame;
         }completion:^(BOOL finished){
-            removeView.frame = CGRectMake(0, titleHeight, self.frame.size.width, self.frame.size.height);
+            removeView.frame = CGRectMake(0, titleHeight, self.frame.size.width, self.frame.size.height-titleHeight);
             NSLog(@"%f",viewSelected.frame.size.width);
             [viewSelected addSubview:removeView];
             [viewSelected sendSubviewToBack:removeView];
+            UIImageView * bgContentImageView = (UIImageView *)[viewSelected viewWithTag:199];
+            [viewSelected sendSubviewToBack:bgContentImageView];
+            
             viewSelected = nil;
         }];
     }
@@ -148,11 +158,8 @@ static CGRect oldFrame;//save frame to send back presenting view
 {
     //check view presenting
     if(viewSelected) return;
-    if (selecttingIndex - 1 != button.tag) {
+    if ((int)scrView.contentOffset.y % (int)topSpace != 0 || selecttingIndex - 1 != button.tag) {
         isSelecting = YES;
-
-     //   CGPoint offset = scrView.contentOffset;
-     //   [scrView setContentOffset:offset animated:NO];
         [scrView setContentOffset:CGPointMake(0,  topSpace* button.tag)animated:YES];
         return;
     }
@@ -183,20 +190,23 @@ static CGRect oldFrame;//save frame to send back presenting view
     
     }];
 }
-
+static int const max_stack_num_to_show = 20;//num of stack must fix at same time
 -(void)fixFrameForItems
 {
   
     //range from 0 -> 230 iphone
     //fix current item
+    
+    CGFloat testHeight = titleHeight - 10;
+    
     CGFloat range = selecttingIndex * topSpace -curr_scroll_y ;
-    CGFloat distance =titleHeight + (topSpace - titleHeight)*range/topSpace;
+    CGFloat distance =testHeight + (topSpace - testHeight)*range/topSpace;
     
     UIView * curView = [arrStacks objectAtIndex:selecttingIndex];
     //update selected view
-    CGRect itemFrame = curView.frame;
-    itemFrame.origin.y =topSpace + topSpace * selecttingIndex;
-    curView.frame = itemFrame;
+    CGRect curViewFrame = curView.frame;
+    curViewFrame.origin.y =topSpace + topSpace * selecttingIndex;
+    curView.frame = curViewFrame;
 
     [self transFormView:curView rate:1.0f];
     
@@ -209,33 +219,32 @@ static CGRect oldFrame;//save frame to send back presenting view
         rect.origin.y = curView.frame.origin.y - distance;
         aboveView.frame = rect;
         CGFloat x =(topSpace - range)/topSpace;
-        CGFloat rate = 1.0 -rateFinal*x/(x + 10);
+        CGFloat rate = 1.0 -rateFinal*x/(x + 30);
         [self transFormView:aboveView rate:rate];
 
         
     }
     //fix other items
     if(selecttingIndex > 1)
-        for (int i = selecttingIndex - 1; i > 0; i--)
+    {
+        int rangeToShow = selecttingIndex > max_stack_num_to_show ? selecttingIndex - max_stack_num_to_show : 0;
+
+        for (int i = selecttingIndex - 1; i > rangeToShow; i--)
         {
             UIView * view1 =[arrStacks objectAtIndex:i];
             UIView * view2 =[arrStacks objectAtIndex:i-1];
-            
             range = i * topSpace -curr_scroll_y;
-            
-            
             CGFloat x =(topSpace - range)/topSpace;
-            CGFloat rate = 1.0 -rateFinal*x/(x + 10);
+            CGFloat rate = 1.0 -rateFinal*x/(x + 30);
             NSLog(@"range %f; rate %f",range,rate);
 
             [self transFormView:view2 rate:rate];
-         
+            
             CGRect rect = view2.frame;
-            rect.origin.y = view1.frame.origin.y - titleHeight*rate;
-
+            rect.origin.y = view1.frame.origin.y - testHeight*rate;
             view2.frame = rect;
         }
-    
+    }
 }
 
 -(void)transFormView:(UIView *)view rate:(CGFloat)rate

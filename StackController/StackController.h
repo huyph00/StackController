@@ -29,7 +29,6 @@
     id<StackControllerDelegate> delegate;
     UIScrollView * scrView;
 
-    CGFloat zoomRate;
     CGFloat titleHeight;
     
     UIButton * btnHome;
