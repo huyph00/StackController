@@ -14,6 +14,7 @@
 @end
 @interface StackController : UIView<UIScrollViewDelegate>
 {
+    BOOL isSelecting;
     NSArray * arrData;
     NSMutableArray * arrStacks;
 
