@@ -241,7 +241,7 @@ static int const max_stack_num_to_show = 20;//num of stack must fix at same time
             [self transFormView:view2 rate:rate];
             
             CGRect rect = view2.frame;
-            rect.origin.y = view1.frame.origin.y - testHeight*rate;
+            rect.origin.y = view1.frame.origin.y - (testHeight+1)*rate;
             view2.frame = rect;
         }
     }
