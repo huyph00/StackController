@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		98A7B34A192D90590012733E /* stack-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B349192D90590012733E /* stack-bg.png */; };
-		98A7B34C192D95560012733E /* close-btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B34B192D95560012733E /* close-btn.png */; };
 		98A7B34E192D9FE20012733E /* stack-bg-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B34D192D9FE20012733E /* stack-bg-1.png */; };
 		98A7B350192DDC120012733E /* stack-content-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B34F192DDC120012733E /* stack-content-bg.png */; };
 		98A7B352192DF4D10012733E /* background-01.png in Resources */ = {isa = PBXBuildFile; fileRef = 98A7B351192DF4D10012733E /* background-01.png */; };
@@ -30,6 +29,8 @@
 		98B6CFD3192703010020A3A3 /* StackControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B6CFD2192703010020A3A3 /* StackControllerTests.m */; };
 		98B6CFDE19270B170020A3A3 /* StackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B6CFDD19270B170020A3A3 /* StackController.m */; };
 		98B6CFE119270B540020A3A3 /* StackObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B6CFE019270B540020A3A3 /* StackObject.m */; };
+		98CC185C192EE2840012826F /* menu-select.png in Resources */ = {isa = PBXBuildFile; fileRef = 98CC185B192EE2840012826F /* menu-select.png */; };
+		98D50978192EF0B300268F81 /* close-btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 98D50977192EF0B300268F81 /* close-btn.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,7 +45,6 @@
 
 /* Begin PBXFileReference section */
 		98A7B349192D90590012733E /* stack-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stack-bg.png"; sourceTree = "<group>"; };
-		98A7B34B192D95560012733E /* close-btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-btn.png"; sourceTree = "<group>"; };
 		98A7B34D192D9FE20012733E /* stack-bg-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stack-bg-1.png"; sourceTree = "<group>"; };
 		98A7B34F192DDC120012733E /* stack-content-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stack-content-bg.png"; sourceTree = "<group>"; };
 		98A7B351192DF4D10012733E /* background-01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-01.png"; sourceTree = "<group>"; };
@@ -73,6 +73,8 @@
 		98B6CFDD19270B170020A3A3 /* StackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackController.m; sourceTree = "<group>"; };
 		98B6CFDF19270B540020A3A3 /* StackObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackObject.h; sourceTree = "<group>"; };
 		98B6CFE019270B540020A3A3 /* StackObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackObject.m; sourceTree = "<group>"; };
+		98CC185B192EE2840012826F /* menu-select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-select.png"; sourceTree = "<group>"; };
+		98D50977192EF0B300268F81 /* close-btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-btn.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,11 +153,12 @@
 		98B6CFAB192703010020A3A3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				98D50977192EF0B300268F81 /* close-btn.png */,
 				98A7B355192DF7BB0012733E /* background-02.png */,
 				98A7B351192DF4D10012733E /* background-01.png */,
 				98A7B34F192DDC120012733E /* stack-content-bg.png */,
 				98A7B34D192D9FE20012733E /* stack-bg-1.png */,
-				98A7B34B192D95560012733E /* close-btn.png */,
+				98CC185B192EE2840012826F /* menu-select.png */,
 				98A7B349192D90590012733E /* stack-bg.png */,
 				98B6CFAC192703010020A3A3 /* StackController-Info.plist */,
 				98B6CFAD192703010020A3A3 /* InfoPlist.strings */,
@@ -261,9 +264,10 @@
 			files = (
 				98B6CFBB192703010020A3A3 /* Main_iPad.storyboard in Resources */,
 				98A7B350192DDC120012733E /* stack-content-bg.png in Resources */,
-				98A7B34C192D95560012733E /* close-btn.png in Resources */,
+				98CC185C192EE2840012826F /* menu-select.png in Resources */,
 				98A7B34E192D9FE20012733E /* stack-bg-1.png in Resources */,
 				98A7B34A192D90590012733E /* stack-bg.png in Resources */,
+				98D50978192EF0B300268F81 /* close-btn.png in Resources */,
 				98B6CFC0192703010020A3A3 /* Images.xcassets in Resources */,
 				98B6CFB8192703010020A3A3 /* Main_iPhone.storyboard in Resources */,
 				98A7B356192DF7BB0012733E /* background-02.png in Resources */,

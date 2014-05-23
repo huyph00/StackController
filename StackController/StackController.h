@@ -20,32 +20,29 @@
 
     StackObject * stackSelected;
 
-    CGFloat curr_scroll_y;
-    
     int selecttingIndex;
     
     UIView * viewSelected;
     
     id<StackControllerDelegate> delegate;
     UIScrollView * scrView;
-
-    CGFloat titleHeight;
     
     UIButton * btnHome;
+    CGFloat curr_scroll_y;
     CGFloat topSpace;
     CGFloat rateFinal ;
-    CGFloat selectedStack_origin_y ;
+    CGFloat selectedStack_offset_y ;
+    CGFloat titleHeight;
 
     UIFont * titleFont;
 }
 @property(nonatomic,strong)UIScrollView * scrView;
 @property(nonatomic,strong)UIFont * titleFont;
 
-@property(nonatomic)CGFloat zoomRate;
 @property(nonatomic)CGFloat titleHeight;
 
 @property(nonatomic,strong) StackObject * stackSelected;
--(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectStackAtOriginY:(CGFloat)origin_y selectedIndex:(int)index;
+-(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectStackOffsetY:(CGFloat)offset_y selectedIndex:(int)index;
 -(void)setUpView;
 
 @end

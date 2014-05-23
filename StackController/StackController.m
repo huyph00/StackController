@@ -20,7 +20,7 @@
     return self;
 }
 
--(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectStackAtOriginY:(CGFloat)origin_y selectedIndex:(int)index
+-(id)initWithFrame:(CGRect)frame data:(NSArray *)data titleFont:(UIFont*)font selectStackOffsetY:(CGFloat)origin_y selectedIndex:(int)index
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -36,7 +36,7 @@
         else   if(index >= arrData.count)selecttingIndex = arrData.count- 1;
         else selecttingIndex = index;
         
-        selectedStack_origin_y = origin_y;
+        selectedStack_offset_y = origin_y;
         arrStacks = [NSMutableArray array];
 
     }
@@ -46,7 +46,7 @@
 {
     CGRect scrRect = self.bounds;
     
-    scrRect.origin.y = -(scrRect.size.height/2 -  selectedStack_origin_y)*2 ;
+    scrRect.origin.y = -(scrRect.size.height/2 -  selectedStack_offset_y)*2 ;
     scrRect.size.height -= scrRect.origin.y;
     topSpace = scrRect.size.height/2; // define topspace = scrollheight/2
     
@@ -64,9 +64,9 @@
     //button remove showing view
     btnHome = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    btnHome.frame = CGRectMake(30, 30, 40 , 40);
+    btnHome.frame = CGRectMake(0 , 30, 40 , 40);
     //  [btnHome setImage:[self standarScaleWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]]] forState:UIControlStateNormal];
-    [btnHome setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]] forState:UIControlStateNormal];
+    [btnHome setBackgroundImage:[self standarScaleWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"close-btn" ofType:@"png"]] ] forState:UIControlStateNormal];
     [btnHome addTarget:self action:@selector(backToHome:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:btnHome];
     scrView.bounces = NO;
@@ -182,7 +182,7 @@ static CGRect oldFrame;//save frame to send back presenting view
     stackSelected = obj;
     viewSelected= [arrStacks objectAtIndex:button.tag];
 
-    CGFloat viewY =viewSelected.frame.origin.y + titleHeight-   scrView.contentOffset.y;
+    CGFloat viewY =viewSelected.frame.origin.y + titleHeight -  scrView.contentOffset.y + scrView.frame.origin.y;
     CGFloat  viewX = viewSelected.layer.frame.origin.x ;
     CGFloat  viewWidth = viewSelected.layer.frame.size.width;
     oldFrame =CGRectMake(viewX, viewY,viewWidth, obj.viewDetail.frame.size.height);
